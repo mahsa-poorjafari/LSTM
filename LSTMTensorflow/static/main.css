@@ -1,0 +1,6 @@
+#spinner.loading {display: none;     width: 128px;
+    height: 128px;
+    background-image: url('/static/demo-assets-img-loading.gif');}
+
+table#showing_success th, table#showing_success td{width: 150px;
+    text-align: center;}

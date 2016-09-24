@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% load static %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'favicon.png' %}" type="image/png" rel="shortcut icon" />
+    <link href="{% static 'main.css' %}" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="{%  static 'jquery-1.10.2.js' %}"></script>
+    <script type="text/javascript" src="{%  static 'put_data_in_html.js' %}"></script>
+    <title>LSTM by Tensorflow</title>
+
+    <script>
+        $(document).ready(function(){
+
+        // Note that the path doesn't matter for routing; any WebSocket
+        // connection gets bumped over to WebSocket consumers
+
+                // Create a new WebSocket
+            trainig_socket = new WebSocket("ws://" + window.location.host +'/train/');
+            // trainig_socket = new WebSocket("ws://127.0.0.1:8000/<user>");
+            // Assign it an id
+
+{#            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";#}
+{#            var trainig_socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/trainig" + window.location.pathname);#}
+{#            var trainig_socket = new ReconnectingWebSocket("ws://" + window.location.host + "/trainig/");#}
+
+            trainig_socket.onmessage = function(message) {
+                var data = JSON.parse(message.data);
+                //alert("The paragraph was clicked.");
+                $('#showing_success').append(
+                        '<tr><td>' + data.Step + '</td>' +
+                        '<td>' + data.Iter + '</td>' +
+                        '<td>' + data.Minibatch_Loss + '</td>' +
+                        '<td>' + data.Training_Accuracy + '</td></tr>' );
+
+
+{#                    '<p>' + data.learning_rate + '</p>' +#}
+{#                    '<p>' + data.training_iters + '</p>' +#}
+{#                    '<p>' + data.batch_size + '</p>' +#}
+{#                    '<p>' + data.display_step + '</p>' +#}
+{#                    '<p>' + data.n_input + '</p>' +#}
+{#                    '<p>' + data.n_steps + '</p>' +#}
+{#                    '<p>' + data.n_hidden + '</p>' +#}
+{#                    '<p>' + data.n_classes + '</p>');#}
+{#                        '<p>' + data.learning_rate + '</p>' +#}
+{#                    '<p>' + data.training_iters + '</p>' +#}
+{#                    '<p>' + data.batch_size + '</p>' +#}
+{#                    '<p>' + data.display_step + '</p>' +#}
+{#                    '<p>' + data.n_input + '</p>' +#}
+{#                    '<p>' + data.n_steps + '</p>' +#}
+            };
+
+
+{#        };#}
+            $('#DBN_form').submit( function() {
+                var message = {
+                    learning_rate: $('#learning_rate').val(),
+                    training_iters: $('#training_iters').val(),
+                    batch_size: $('#batch_size').val(),
+                    display_step: $('#display_step').val(),
+                    n_input: $('#n_input').val(),
+                    n_steps: $('#n_steps').val(),
+                    n_hidden: $('#n_hidden').val(),
+                    n_classes: $('#n_classes').val(),
+                };
+                //trainig_socket.onopen = function() {
+                trainig_socket.send(JSON.stringify(message));
+                return false;
+                    //trainig_socket.send("hello world");
+                //};
+
+{#                var frm= $('#DBN_form');#}
+{#                var message =  frm.serializeArray();#}
+
+            });
+
+{#        trainig_socket.onmessage = function(e) {#}
+{#            alert(e.data);#}
+{#        };#}
+{#        trainig_socket.onopen = function() {#}
+{#            trainig_socket.send('hello');#}
+{#        };#}
+{#        $('#DBN_form').on('submit', function(event) {#}
+{#            var frm= $('#DBN_form');#}
+{#            alert('111');#}
+{#            //var message =  frm.serializeArray();#}
+{#            var message = {#}
+{#                learning_rate: $('#learning_rate').val()#}
+{#            };#}
+{#            alert(message);#}
+
+{#            trainig_socket.onopen = function() {#}
+{#                trainig_socket.send(JSON.stringify(message));#}
+{#            };#}
+{#            return false;#}
+{#        });#}
+{#        trainig_socket.onmessage = function(message) {#}
+{#            var data = JSON.parse(message.data);#}
+{#            $('#showing_success').append(#}
+{#                '<p>' + data + '</p>'#}
+{#                + '<p>' + data.handle + '</p>'#}
+{#                + '<p>' + data.message + ' </p>'#}
+{#            );#}
+{#        };#}
+{#        $(document).ready(function(){#}
+{#            var frm = $('#DBN_form');#}
+{#            frm.submit(function() {#}
+{#                var frm_data = JSON.stringify(frm.serializeArray());#}
+{#                socket.onopen = function() {#}
+{#                    socket.send('hello');#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#        $(document).ready(function() {#}
+{#            var frm = $('#DBN_form');#}
+{#            frm.submit(function() {#}
+{#                $.ajax({#}
+{#                    data: JSON.stringify(frm.serializeArray()),#}
+{#                    type: frm.attr('method'),#}
+{#                    url: 'http://127.0.0.1:8000/mnist_data_set',#}
+{#                    contentType: "application/json; charset=utf-8" ,#}
+{#                    dataType: 'json',#}
+{#                    success:function(data) {#}
+{#                        alert("success");#}
+{#                        // var data_preds = JSON.parse(data);#}
+{##}
+{#                        // put_data(data.preds);#}
+{##}
+{#                        //showclassifications_data(data.showclassifications);#}
+{#                    },#}
+{#                    error:function(xhr,errmsg,err) {#}
+{#                        alert(xhr.status + ": " + xhr.responseText);#}
+{#                    }#}
+{##}
+{#                });#}
+{#                return false;#}
+{#            });#}
+
+{#            $(document).ajaxStart(function() {#}
+{#                $('.loading').css('display', 'block');#}
+{#            }).ajaxComplete(function() {#}
+{#                $('.loading').css('display', 'none');#}
+        });
+
+
+    </script>
+</head>
+<body style="padding:5%">
+    <h1> Training LSTM </h1>
+    <h1>{{ client }}</h1>
+    <h3>A Reccurent Neural Network (LSTM) implementation example using TensorFlow library.</h3>
+    <h4> Data Set MNIST </h4>
+
+    <hr>
+
+
+    <div id="error_msg"></div>
+    <div id="spinner" class="loading" style="display: none;width: 128px; height: 128px; background-image: url({% static 'demo-assets-img-loading.gif'%}) ;"></div>
+
+
+    {% block content %}
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post" action="" id="DBN_form" role="form">
+        {#            {% csrf_token %}#}
+                    <div><h4># Parameters</h4>
+                        <label>learning_rate</label>
+                        <i>learning_rate = 0.001</i>
+                        <input type="text" name="learning_rate" id="learning_rate" value="0.001">
+                        <br>
+                        <label>training_iters</label>
+                        <i>training_iters = 100000</i>
+                        <input type="text" name="training_iters" id="training_iters" value="100000">
+                        <br>
+                        <label>batch_size</label>
+                        <i>batch_size = 128</i>
+                        <input type="text" name="batch_size" id="batch_size" value="128">
+                        <br/>
+                        <label>display_step</label>
+                        <i>display_step = 10</i>
+                        <input type="text" name="display_step" id="display_step" value="10">
+                    </div>
+                    <div>
+                        <h4># Network Parameters</h4>
+                        <label>n_input</label>
+                        <i>n_input = 28 # MNIST data input (img shape: 28*28)</i>
+                        <input type="text" name="n_input" id="n_input" value="28">
+                        <br>
+                        <label>n_steps</label>
+                        <i>n_steps = 28 # timesteps</i>
+                        <input type="text" name="n_steps" id="n_steps" value="28">
+                        <br>
+                        <label>n_hidden</label>
+                        <i>n_hidden = 128 # hidden layer num of features</i>
+                        <input type="text" name="n_hidden" id="n_hidden" value="128">
+                        <br/>
+                        <label>n_classes</label>
+                        <i>n_classes = 10 # MNIST total classes (0-9 digits)</i>
+                        <input type="text" name="n_classes" id="n_classes" value="10">
+
+                    </div>
+                    <input type="submit" name="dbn_submit" id="dbn_submit" class="btn btn-primary">
+
+                </form>
+            </div>
+
+
+
+
+            <div class="col-md-6" >
+{#                 <b>{{ request.session.session_key }}</b>  #}
+                <p class="alert alert-success" role="alert" id="Testing_Accuracy">Training Steps</p>
+                <table id="showing_success">
+                    <tr>
+                        <th>Step</th>
+                        <th>Iter</th>
+                        <th>Minibatch_Loss</th>
+                        <th>Training_Accuracy</th>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+{#        <table>#}
+{#            <tr>#}
+{#                <th>Iter</th>#}
+{#                <th>Minibatch Loss</th>#}
+{#                <th>Training Accuracy</th>#}
+{#            </tr>#}
+{#            <tr id="showing_success_tr"></tr>#}
+{##}
+{#        </table>#}
+         </div>
+    {% endblock %}
+
+
+    <!--
+    <script>
+
+        $(document).ready(function() {
+            $(function() {
+                $(':submit#dbn_submit').click(function(e) {
+                  $(':text#learn_rates,:text#learn_rate_decays, :text#epochs, :text#verbose').each(function() {
+                    if ($(this).val().length == 0) {
+                      $(this).css('border', '2px solid red');
+                      e.preventDefault();
+                    }
+                  });
+                });
+            });
+
+        });
+    </script> -->
+
+</body>
+</html>
