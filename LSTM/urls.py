@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^$', LSTMTensorflow.views.index),
     url(r'^index', LSTMTensorflow.views.index),
     url(r'^mnist_data_set', LSTMTensorflow.views.mnist_data_set),
+
 ]

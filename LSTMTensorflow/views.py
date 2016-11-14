@@ -1,20 +1,23 @@
 from django.shortcuts import render
+from channels import Group
+from channels.auth import channel_session_user_from_http
 import tensorflow as tf
 from tensorflow.python.ops import rnn, rnn_cell
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
-from django.http import JsonResponse
 import numpy as np
 import json
-from channels import Channel
-from channels import Group
-import LSTM.settings as s
-from channels.sessions import channel_session
-from django.views import View
-import LSTMTensorflow.consumers
+import time
+
+mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
+
+# def get_item(request):
+#     id = request.GET.get('id', None)
+#     return id
+
 
 def index(request):
-    # user = request.META['USER']
+    # id = int(request.GET.get('id'))
+    # print id
     return render(request, 'index.html')
 
 
@@ -64,7 +67,7 @@ def RNN(x, weights, biases, n_input, n_steps, n_hidden):
     return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
 
-def mnist_data_set(request):
+def mnist_data_set(request, g_name):
     print '------------we are in mnist_data_set NOW! ------------'
     learning_rate = 0
     training_iters= 0
@@ -103,7 +106,7 @@ def mnist_data_set(request):
     #received_json_data = json.dumps(request)
     received_json_data = request
     #received_json_data = json.loads(received_json_data)
-    print 'received_json_data:', received_json_data
+    # print 'received_json_data:', received_json_data
     # print '------------Parameters------------'
     learning_rate = float(received_json_data['learning_rate'])  # for POST form method
     #print 'learning_rate: ', learning_rate
@@ -140,12 +143,10 @@ def mnist_data_set(request):
             print 'It returned None instead:', err
 
         pred = RNN(x, weights, biases, n_input, n_steps, n_hidden)
+        print '------------we are in mnist_data_set Again! ------------'
         #print '=================Pred=============='
         #print pred
-
-
         # Define loss and optimizer
-
         #tf.nn.softmax_cross_entropy_with_logits(logits, labels, name=None)
         # Computes softmax cross entropy between logits and labels.
         # logits: Unscaled log probabilities.
@@ -201,10 +202,11 @@ def mnist_data_set(request):
                     #     "message": data,
                     # })
                     #Channel('ws_message').send({'message': data})
-                    Group("train").send({
+                    Group(g_name).send({
                         'text': json.dumps(data),
                     })
                     # LSTMTensorflow.consumers.ws_message(message)
+
                     print ("----------------Message has been sent from mnist_data_set now!-------------")
                     #message.reply_channel.send({"text": data})
                 step += 1

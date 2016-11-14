@@ -20,9 +20,9 @@
 
         // Note that the path doesn't matter for routing; any WebSocket
         // connection gets bumped over to WebSocket consumers
+            // Create a new WebSocket
 
-                // Create a new WebSocket
-            trainig_socket = new WebSocket("ws://" + window.location.host +'/train/');
+            trainig_socket = new WebSocket("ws://" + window.location.host +'/train'+Math.random()+'/');
             // trainig_socket = new WebSocket("ws://127.0.0.1:8000/<user>");
             // Assign it an id
 
@@ -59,6 +59,7 @@
 
 {#        };#}
             $('#DBN_form').submit( function() {
+
                 var message = {
                     learning_rate: $('#learning_rate').val(),
                     training_iters: $('#training_iters').val(),
